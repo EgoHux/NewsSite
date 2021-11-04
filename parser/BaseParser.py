@@ -1,29 +1,123 @@
+from textwrap import dedent, indent
+import sqlite3
 from bs4 import BeautifulSoup
 import requests
 import uuid
 import os
 import base64
-import enum    
+import enum
 
 class ParserHabr:
-    
-    def start():
-        print("Здесь будет точка входа")
 
-    def parse():
-        response = requests.get(Settings.url["BASE_HABR"], headers=Settings.headers)
-        soup = BeautifulSoup(response.content, 'html.parser')
-        items = soup.findAll('article', class_='tm-articles-list__item')
+    @staticmethod
+    def parse(lastDateParse):
+        global news
+
+        page = 1
+        flag = True
+
+        while flag:
+            url = "{}/news/page{}/".format(URL.BASE_HABR.value, page)
+            news = []
+            try:
+                response = requests.get(url, headers=Settings.headers)
+                soup = BeautifulSoup(response.content, 'html.parser')
+                items = soup.findAll('article', class_='tm-articles-list__item')
+                for item in items:
+                    date = item.find("time").get("datetime")
+                    #if (date < lastDateParse):
+                    #    raise ValueError
+
+                    title = item.find("h2", class_="tm-article-snippet__title tm-article-snippet__title_h2").find("span").text
+                    description = item.find("div", class_="article-formatted-body article-formatted-body_version-2").find("p").text
+                    img = None
+                    try:
+                        urlImage = "{}".format(item.find("img", class_="tm-article-snippet__lead-image")["src"])
+                        print(urlImage)
+                        img = Utils.convertImage(urlImage)[:15]
+                    except TypeError:
+                        img = None
+
+                    post = News(date, title, description, img, REPORTER.HABR_REPORTER.value)
+                    news.append(post)
+
+                page += 1
+                Utils.saveToDataBase(news)
+                falg = False
+
+            #except ValueError:
+            #    flag = False
+            #    print("Новость с такой датой уже была спарсена")
+
+            except TypeError:
+                print("Последняя страница достигнута")
+                Utils.saveToDataBase(news)
+                flag = False
+
+        print("End parse habr")
+        return []
+
+class ParserKuzbassOnline:
+
+    @staticmethod
+    def parse(lastDateParse):
+        global news
+        dateParseStart = ""
+        page = 75
+        flag = True
+        TOTAL_POSTS = 0
         news = []
 
+        while flag:
+            url = "{}/news?feedType=news&page={}#/".format(URL.BASE_KUZBASS_ONLINE.value, page)
+            try:
+                response = requests.get(url, headers=Settings.headers)
+                soup = BeautifulSoup(response.content, 'html.parser')
+                items = soup.find("div", class_="section__card-list card-list card-list--col-4").findAll("a")
+                if (len(items) == 0):
+                    raise Exception
 
+                for item in items:
+                    date = item.find("p", class_="feed-card__date").text.split()[0]
+                    #if (date < lastDateParse):
+                    #    raise ValueError
 
-        print("parse habr")
+                    urlImage = "{}".format(item.find("img").get("src"))
+                    if not ("https" in urlImage):
+                        urlImage = "https://online-kuzbass.ru{}".format(urlImage)
+                    print(urlImage)
+                    img = Utils.convertImage(urlImage)
 
-class ParserName:
-    def parse():
-        print("parse name")
-    
+                    url_post = "{}{}".format(URL.BASE_KUZBASS_ONLINE.value, item.get("href"))
+                    responsePost = requests.get(url_post, headers=Settings.headers)
+                    soupPost = BeautifulSoup(responsePost.content, 'html.parser')
+
+                    postElement = soupPost.find("div", class_="post")
+                    title = dedent(postElement.find("h1", class_="post__title").text).strip()
+
+                    description = dedent(postElement.find("p", class_="post__text").get_text(separator="<br/>")).strip()
+
+                    reporter = REPORTER.KUZBASS_ONLINE_REPORTER.value
+                    post = News(date, title, description, img, reporter)
+                    news.append(post)
+                    print("title: " + title)
+                    TOTAL_POSTS += 1
+
+            except Exception:
+                print("Последняя страница достигнута")
+                flag = False
+                print("TOTAL POSTS: " + str(TOTAL_POSTS))
+
+            except ValueError:
+                print("Пост уже был спарсен")
+                flag = False
+                print("TOTAL POSTS: " + str(TOTAL_POSTS))
+
+            page += 1
+            Utils.saveToDataBase(news)
+
+        #сделать запись о последнем парсинге
+        Utils.saveLastDateParseTodataBase(dateParseStart)
 
 class News:
     date = ""
@@ -40,13 +134,22 @@ class News:
         self.reporter = reporter
 
 class Utils:
+
+    @staticmethod
+    def convertImage(url):
+        pathImage = Utils.downloadImg(url)
+        blob = Utils.convertToBlob(pathImage)
+        Utils.deleteFile(pathImage)
+        return blob
+
+    @staticmethod
     def convertToBlob(pathImg):
         img = open(pathImg, 'rb').read()
         blob = base64.encodebytes(img)
-
         print("перевожу скачанную img в blob")
         return blob
 
+    @staticmethod
     def downloadImg(url):
 
         fileName = Settings.basePackageImg + str(uuid.uuid4()) + ".jpg"
@@ -56,38 +159,68 @@ class Utils:
 
         return fileName
 
+    @staticmethod
     def deleteFile(path):
         os.remove(path)
         print("удалить img после записи в БД")
 
+    @staticmethod
     def saveToDataBase(newsList):
         # логика сохранения в БД через ОРМ
+        i = 1
+        for item in newsList:
+            print("\n\n{}. date => {} \ntitle => {} \ndescr => {} \nimg => {} \nreporter => {}".format(i, item.date, item.title, item.description, item.img[:15], item.reporter))
+            i += 1
         print("save")
 
-    def getParseLastDate():
+    @staticmethod
+    def saveLastDateParseTodataBase(date):
+        print("save date")
+
+    @staticmethod
+    def getLastDateParse():
         print("LastDate")
         # возвращение последней даты парсинга. Будем в БД хранить ее
-        
+
+class DataBase:
+    @staticmethod
+    def create_connection(path):
+        connection = None
+        try:
+            connection = sqlite3.connect(path)
+            print("Connection to SQLite DB successful")
+        except Exception as e:
+            print(f"The error '{e}' occurred")
+
+        return connection
+
+class URL(enum.Enum):
+    BASE_HABR = "https://habr.com/ru"
+    BASE_KUZBASS_ONLINE = "https://kemerovo.kuzbass-online.ru"
+
+class REPORTER(enum.Enum):
+    HABR_REPORTER = "HABR"
+    KUZBASS_ONLINE_REPORTER = "KUZBASS_ONLINE"
+
 
 class Settings:
-    url = {
-        "BASE_HABR": "https://habr.com/ru/news/",
-        "123": "123",
-        "site": "site"
-    }
 
     headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+    'User-Agent': 'Mozilla/5.0 (Windows NT 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84 '
     }
+
+    pathToDatabaseFile = "../TopNews/db.sqlite3"
 
     basePackageImg = "D://"
 
     # креды от dataBase сюда же можно написать
+connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 
 
-#news = News("1", "2", "3", "4")
-ParserHabr.parse()
+
+lastDateParse = Utils.getLastDateParse()
+ParserKuzbassOnline.parse(lastDateParse)
 #path = Utils.downloadImg("https://img5.goodfon.ru/wallpaper/nbig/3/73/abstraktsiia-antisfera-vodovorot-krasok-kartinka-chernyi-fon.jpg")
 #f = Utils.convertToBlob(path)
 #Utils.deleteFile(path)
