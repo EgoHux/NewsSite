@@ -1,0 +1,81 @@
+body {
+  background-color: #A85A5A;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.form {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.form .title_form {
+  font-family: Playfair Display;
+  font-size: 50px;
+  font-weight: 500;
+  color: white;
+}
+
+input {
+  min-width: 80%;
+  padding: 15px 20px;
+  margin-top: 10px;
+  color: black;
+  font-family: Play;
+  font-size: 20px;
+  border: 0;
+  outline: none;
+  border-radius: 5px;
+}
+
+input::-webkit-input-placeholder {
+  color: black;
+}
+
+.buttons {
+  margin-top: 30px;
+}
+
+.buttons a {
+  font-family: Play;
+  font-size: 25px;
+  font-weight: normal;
+  display: block;
+  color: white;
+  text-decoration: none;
+}
+
+button {
+  min-width: 50%;
+  font-family: Play;
+  font-size: 25px;
+  font-weight: normal;
+  color: white;
+  border-radius: 42px;
+  background-color: black;
+  border: 0;
+  padding: 15px 15px;
+  outline: none;
+}
+
+button:last-child {
+  margin-top: 15px;
+}
+
+.back_arrow {
+  position: absolute;
+  left: 5%;
+  top: 5%;
+  -webkit-transform: translate(5%, 5%);
+          transform: translate(5%, 5%);
+}
+/*# sourceMappingURL=style.css.map */
