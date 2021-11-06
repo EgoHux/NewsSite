@@ -6,6 +6,7 @@ import uuid
 import os
 import base64
 import enum
+from datetime import datetime
 
 class ParserHabr:
 
@@ -62,7 +63,6 @@ class ParserKuzbassOnline:
     @staticmethod
     def parse(lastDateParse):
         global news
-        dateParseStart = ""
         page = 75
         flag = True
         TOTAL_POSTS = 0
@@ -79,8 +79,10 @@ class ParserKuzbassOnline:
 
                 for item in items:
                     date = item.find("p", class_="feed-card__date").text.split()[0]
-                    #if (date < lastDateParse):
-                    #    raise ValueError
+                    date = datetime.strptime(date, "%d.%m.%Y")
+
+                    if (date < lastDateParse):
+                        raise ValueError
 
                     urlImage = "{}".format(item.find("img").get("src"))
                     if not ("https" in urlImage):
@@ -98,26 +100,23 @@ class ParserKuzbassOnline:
                     description = dedent(postElement.find("p", class_="post__text").get_text(separator="<br/>")).strip()
 
                     reporter = REPORTER.KUZBASS_ONLINE_REPORTER.value
-                    post = News(date, title, description, img, reporter)
+                    post = News(date.strftime("%d-%m-%Y"), title, description, img, reporter)
                     news.append(post)
                     print("title: " + title)
                     TOTAL_POSTS += 1
-
-            except Exception:
-                print("Последняя страница достигнута")
-                flag = False
-                print("TOTAL POSTS: " + str(TOTAL_POSTS))
 
             except ValueError:
                 print("Пост уже был спарсен")
                 flag = False
                 print("TOTAL POSTS: " + str(TOTAL_POSTS))
 
-            page += 1
-            Utils.saveToDataBase(news)
+            except Exception:
+                print("Последняя страница достигнута")
+                flag = False
+                print("TOTAL POSTS: " + str(TOTAL_POSTS))
 
-        #сделать запись о последнем парсинге
-        Utils.saveLastDateParseTodataBase(dateParseStart)
+            page += 1
+            DataBase.saveToDataBase(news)
 
 class News:
     date = ""
@@ -165,22 +164,13 @@ class Utils:
         print("удалить img после записи в БД")
 
     @staticmethod
-    def saveToDataBase(newsList):
-        # логика сохранения в БД через ОРМ
-        i = 1
-        for item in newsList:
-            print("\n\n{}. date => {} \ntitle => {} \ndescr => {} \nimg => {} \nreporter => {}".format(i, item.date, item.title, item.description, item.img[:15], item.reporter))
-            i += 1
-        print("save")
+    def getLastDateParse(connect):
+        cursor = connect.cursor()
+        query = "SELECT lastDate FROM DateLastParse ORDER BY id DESC LIMIT 1"
+        record = cursor.execute(query).fetchall()[0][0]
+        cursor.close()
 
-    @staticmethod
-    def saveLastDateParseTodataBase(date):
-        print("save date")
-
-    @staticmethod
-    def getLastDateParse():
-        print("LastDate")
-        # возвращение последней даты парсинга. Будем в БД хранить ее
+        return datetime.strptime(record, "%d-%m-%Y")
 
 class DataBase:
     @staticmethod
@@ -193,6 +183,28 @@ class DataBase:
             print(f"The error '{e}' occurred")
 
         return connection
+
+    @staticmethod
+    def saveToDataBase(newsList):
+        # логика сохранения в БД через ОРМ
+        i = 1
+        for item in newsList:
+            print("\n\n{}. date => {} \ntitle => {} \ndescr => {} \nimg => {} \nreporter => {}".format(i, item.date,
+                                                                                                       item.title,
+                                                                                                       item.description,
+                                                                                                       item.img[:15],
+                                                                                                       item.reporter))
+            i += 1
+        print("save")
+
+    @staticmethod
+    def saveLastDateParseTodataBase(date, connect):
+        cursor = connect.cursor()
+        query = "INSERT INTO DateLastParse (lastDate) VALUES ('{}')".format(datetime.strftime(date, "%d-%m-%Y"))
+        print(query)
+        cursor.execute(query)
+        connect.commit()
+        cursor.close()
 
 class URL(enum.Enum):
     BASE_HABR = "https://habr.com/ru"
@@ -218,9 +230,15 @@ class Settings:
 connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 
 
+startDateParse = datetime.strptime(datetime.now().date().__str__(), "%Y-%m-%d")
+lastDateParse = Utils.getLastDateParse(connect)
 
-lastDateParse = Utils.getLastDateParse()
 ParserKuzbassOnline.parse(lastDateParse)
+
+#сделать запись о последнем парсинге
+DataBase.saveLastDateParseTodataBase(startDateParse, connect)
+
+
 #path = Utils.downloadImg("https://img5.goodfon.ru/wallpaper/nbig/3/73/abstraktsiia-antisfera-vodovorot-krasok-kartinka-chernyi-fon.jpg")
 #f = Utils.convertToBlob(path)
 #Utils.deleteFile(path)
