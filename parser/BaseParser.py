@@ -61,7 +61,7 @@ class ParserHabr:
 class ParserKuzbassOnline:
 
     @staticmethod
-    def parse(lastDateParse):
+    def parse(lastDateParse, connect):
         global news
         page = 75
         flag = True
@@ -99,7 +99,7 @@ class ParserKuzbassOnline:
 
                     description = dedent(postElement.find("p", class_="post__text").get_text(separator="<br/>")).strip()
 
-                    reporter = REPORTER.KUZBASS_ONLINE_REPORTER.value
+                    reporter = REPORTER.KUZBASS_ONLINE_REPORTER_ID.value
                     post = News(date.strftime("%d-%m-%Y"), title, description, img, reporter)
                     news.append(post)
                     print("title: " + title)
@@ -116,7 +116,7 @@ class ParserKuzbassOnline:
                 print("TOTAL POSTS: " + str(TOTAL_POSTS))
 
             page += 1
-            DataBase.saveToDataBase(news)
+            DataBase.saveToDataBase(news, connect)
 
 class News:
     date = ""
@@ -143,9 +143,8 @@ class Utils:
 
     @staticmethod
     def convertToBlob(pathImg):
-        img = open(pathImg, 'rb').read()
-        blob = base64.encodebytes(img)
-        print("перевожу скачанную img в blob")
+        img = open(pathImg, 'rb')
+        blob = img.read()
         return blob
 
     @staticmethod
@@ -161,16 +160,6 @@ class Utils:
     @staticmethod
     def deleteFile(path):
         os.remove(path)
-        print("удалить img после записи в БД")
-
-    @staticmethod
-    def getLastDateParse(connect):
-        cursor = connect.cursor()
-        query = "SELECT lastDate FROM DateLastParse ORDER BY id DESC LIMIT 1"
-        record = cursor.execute(query).fetchall()[0][0]
-        cursor.close()
-
-        return datetime.strptime(record, "%d-%m-%Y")
 
 class DataBase:
     @staticmethod
@@ -185,16 +174,13 @@ class DataBase:
         return connection
 
     @staticmethod
-    def saveToDataBase(newsList):
-        # логика сохранения в БД через ОРМ
-        i = 1
-        for item in newsList:
-            print("\n\n{}. date => {} \ntitle => {} \ndescr => {} \nimg => {} \nreporter => {}".format(i, item.date,
-                                                                                                       item.title,
-                                                                                                       item.description,
-                                                                                                       item.img[:15],
-                                                                                                       item.reporter))
-            i += 1
+    def saveToDataBase(posts, connect):
+        for item in posts:
+            cursor = connect.cursor()
+            cursor.execute("INSERT INTO Posts (date, title, description, img, reporterId) VALUES(?, ?, ?, ?, ?)", [item.date, item.title, item.description, sqlite3.Binary(item.img), item.reporter])
+            connect.commit()
+            cursor.close()
+
         print("save")
 
     @staticmethod
@@ -206,6 +192,15 @@ class DataBase:
         connect.commit()
         cursor.close()
 
+    @staticmethod
+    def getLastDateParse(connect):
+        cursor = connect.cursor()
+        query = "SELECT lastDate FROM DateLastParse ORDER BY id DESC LIMIT 1"
+        record = cursor.execute(query).fetchall()[0][0]
+        cursor.close()
+
+        return datetime.strptime(record, "%d-%m-%Y")
+
 class URL(enum.Enum):
     BASE_HABR = "https://habr.com/ru"
     BASE_KUZBASS_ONLINE = "https://kemerovo.kuzbass-online.ru"
@@ -213,6 +208,8 @@ class URL(enum.Enum):
 class REPORTER(enum.Enum):
     HABR_REPORTER = "HABR"
     KUZBASS_ONLINE_REPORTER = "KUZBASS_ONLINE"
+
+    KUZBASS_ONLINE_REPORTER_ID = 1
 
 
 class Settings:
@@ -226,25 +223,15 @@ class Settings:
 
     basePackageImg = "D://"
 
-    # креды от dataBase сюда же можно написать
 connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 
 
 startDateParse = datetime.strptime(datetime.now().date().__str__(), "%Y-%m-%d")
-lastDateParse = Utils.getLastDateParse(connect)
+lastDateParse = DataBase.getLastDateParse(connect)
 
-ParserKuzbassOnline.parse(lastDateParse)
+# Сюда вписывать все парсеры
+# ParserKuzbassOnline.parse(lastDateParse, connect)
+
 
 #сделать запись о последнем парсинге
 DataBase.saveLastDateParseTodataBase(startDateParse, connect)
-
-
-#path = Utils.downloadImg("https://img5.goodfon.ru/wallpaper/nbig/3/73/abstraktsiia-antisfera-vodovorot-krasok-kartinka-chernyi-fon.jpg")
-#f = Utils.convertToBlob(path)
-#Utils.deleteFile(path)
-#print(f)
-
-        
-        
-
-        
