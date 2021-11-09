@@ -187,11 +187,29 @@ header
                             display: flex
                             justify-content: right
                             align-items: center
+    
+    .pagination
+        margin-top: 50px
+        ul
+            display: flex
+            list-style-type: none
+            justify-content: center
+
+            li
+
+                a
+                    color: black
+                    float: left
+                    padding: 8px 16px
+                    text-decoration: none
+
+                .active
+                    background-color: #4CAF50
+                    color: white
                         
-
-
-
-
+                &:hover
+                    &:not(.active)
+                        background-color: #ddd
 
 footer
     border-top: 1px solid #000000
