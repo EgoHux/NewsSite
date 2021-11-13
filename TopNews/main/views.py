@@ -19,7 +19,7 @@ def login(request):
 
 
 def list_news(request):
-    return render(request, 'main/list_news.html')
+    return render(request, 'main/news_list.html')
 
 
 def top_news(request):

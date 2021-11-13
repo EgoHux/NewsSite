@@ -1,10 +1,178 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лента новостей</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'news_frame/css/style.css' %}">
 </head>
 <body>
+<header>
+    <nav class="menu ">
+        <ul>
+            <div class="left col-lg-4">
+                <li>
+                    <a href="">новости</a>
+                </li>
+                <li>
+                    <a href="">популярные</a>
+                </li>
+            </div>
+            <li class="center col-lg-4 text-center">
+                <!-- <input type="text" placeholder="Введите название статьи">
+                <button>найти</button> -->
+                <form>
+                    <div class="search">
+                        <input class="col-lg-9" type="search" placeholder="Введите название статьи" name="q">
+                        <input class="col-lg-3" type="submit" value="поиск">
+                    </div>
+                </form>
+            </li>
+            <div class="right col-lg-4 text-center">
+                <li>
+                    <a href="">регистрация</a>
+                </li>
+                <li>
+                    <a href="">вход</a>
+                </li>
+                <li>
+                    <a href="">
+                        <img src="{% static 'news_frame/img/icon_avatar.svg' %}" alt="img">
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </nav>
+</header>
+<div class="body">
+    <div class="container">
+        <div class="row">
+            <div class="post">
+                <div class="img_block">
+                    <img src="{% static 'news_frame/img/nlo.png' %}" alt="img" class="img"> <!--srcset="img-320.png 320w, img-640.png 640w" -->
+                </div>
 
-</body>
-</html>
+                <div class="post_info">
+                    <h2 class="post_title">title ......</h2>
+                    <div class="post_description">
+                        description ....
+                    </div>
+                    <ul class="hashtags">
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+
+                    </ul>
+                    <div class="post_reporter">
+                        <a href="">Источник: reporter ...</a>
+                    </div>
+                </div>
+
+
+                <div class="row down_line_wrapper">
+                    <div class="rating col-lg-6">
+                        <div class="likes">
+                            <img src="{% static 'news_frame/img/like_like_disable.svg' %}" alt="img">
+                            <div class="count">
+                                5
+                            </div>
+                        </div>
+                        <div class="dislikes">
+                            <img src="{% static 'news_frame/img/icon_dislike_disable.svg' %}" alt="img">
+                            <div class="count">
+                                5
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right_box col-lg-6">
+                        <div class="viewers">
+                            <img src="{% static 'news_frame/img/icon_viwers.svg' %}" alt="img">
+                            <div class="count">
+                                5
+                            </div>
+                            <div class="date">
+                                08.12.2021
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="comments_wrapper">
+                <form class="send_comment d-flex">
+                    <input class="message col-lg-8" type="text" placeholder="Введите сообщение"/>
+                    <button class="button col-lg-2" type="submit">Отправить</button>
+                </form>
+                <div class="comments">
+                    <div class="comment">
+                        <div class="message">
+                            <span>123123</span>
+                        </div>
+                        <div class="down_line">
+                                <span class="author">
+                                    Аноним
+                                </span>
+                            <span class="date">
+                                    12.08.2021
+                                </span>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="message">
+                            <span>123123</span>
+                        </div>
+                        <div class="down_line">
+                                <span class="author">
+                                    Аноним
+                                </span>
+                            <span class="date">
+                                    12.08.2021
+                                </span>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="message">
+                            <span>123123</span>
+                        </div>
+                        <div class="down_line">
+                                <span class="author">
+                                    Аноним
+                                </span>
+                            <span class="date">
+                                    12.08.2021
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <nav class="footer">
+        <ul>
+            <li>
+                <a href="">Справка_1</a>
+            </li>
+            <li>
+                <a href="">Справка_2</a>
+            </li>
+            <li>
+                <a href="">Справка_3</a>
+            </li>
+        </ul>
+    </nav>
+</footer>

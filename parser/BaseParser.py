@@ -18,7 +18,7 @@ class ParserHabr:
         flag = True
 
         while flag:
-            url = "{}/news/page{}/".format(URL.BASE_HABR.value, page)
+            url = "{}/news_frame/page{}/".format(URL.BASE_HABR.value, page)
             news = []
             try:
                 response = requests.get(url, headers=Settings.headers)
@@ -69,7 +69,7 @@ class ParserKuzbassOnline:
         news = []
 
         while flag:
-            url = "{}/news?feedType=news&page={}#/".format(URL.BASE_KUZBASS_ONLINE.value, page)
+            url = "{}/news_frame?feedType=news_frame&page={}#/".format(URL.BASE_KUZBASS_ONLINE.value, page)
             try:
                 response = requests.get(url, headers=Settings.headers)
                 soup = BeautifulSoup(response.content, 'html.parser')
