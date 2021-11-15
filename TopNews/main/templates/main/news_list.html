@@ -123,11 +123,65 @@
                         </div>
                     </div>
                 </a>
-                {% for i in tasks %}
-                <div class="alert alert-warning mt-2">
-                    <h3>{{ i.title }}</h3>
-                    <p>{{ i.task }}</p>
-                </div>
+                {% for i in posts %}
+                <a href="{% url 'news_frame' %}" class="post_wrapper">
+                    <div class="post col-lg-12">
+                        <div class="left_box col-lg-6">
+                            <img src="{{ i.image.url}}" alt="img">
+                            <!--srcset="img-320.png 320w, img-640.png 640w" -->
+                            <ul class="hashtags">
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right_box col-lg-6">
+                            <div class="post_title">
+                                <h2>{{i.title}}</h2>
+                            </div>
+                            <div class="post_description">
+                                {{i.description}}
+                            </div>
+                            <div class="post_reporter">
+                                reporter ...
+                            </div>
+                            <div class="post_date">
+                                {{i.date}}
+                            </div>
+                            <div class="row down_line_wrapper">
+                                <div class="rating col-lg-6">
+                                    <div class="likes">
+                                        <img src="{% static 'news_list/img/like_like_disable.svg' %}" alt="img">
+                                        <div class="count">
+                                            5
+                                        </div>
+                                    </div>
+                                    <div class="dislikes">
+                                        <img src="{% static 'news_list/img/icon_dislike_disable.svg' %}" alt="img">
+                                        <div class="count">
+                                            5
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="viewers col-lg-6">
+                                    <img src="{% static 'news_list/img/icon_viwers.svg' %}" alt="img">
+                                    <div class="count">
+                                        5
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
             <div class="pagination">

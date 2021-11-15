@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from . models import Posts
 
 
 def index(request):
-    return render(request, 'main/index.html')
+    posts = Posts.objects.all()
+    return render(request, 'main/index.html', {'title': 'Main Page', 'posts': posts})
 
 
 def about(request):
@@ -19,7 +21,8 @@ def login(request):
 
 
 def list_news(request):
-    return render(request, 'main/news_list.html')
+    posts = Posts.objects.all()
+    return render(request, 'main/news_list.html', {'title': 'Main Page', 'posts': posts})
 
 
 def top_news(request):
