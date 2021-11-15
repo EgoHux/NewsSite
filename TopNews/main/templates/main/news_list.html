@@ -123,6 +123,12 @@
                         </div>
                     </div>
                 </a>
+                {% for i in tasks %}
+                <div class="alert alert-warning mt-2">
+                    <h3>{{ i.title }}</h3>
+                    <p>{{ i.task }}</p>
+                </div>
+                {% endfor %}
             </div>
             <div class="pagination">
                 <ul class="col align-self-center">
