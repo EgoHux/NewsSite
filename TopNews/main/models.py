@@ -32,6 +32,7 @@ class Users(models.Model):
 class Posts(models.Model):
     date = models.DateField()
     title = models.CharField(max_length=30)
+    short_description = models.TextField()
     description = models.TextField()
     image = models.ImageField()
     viewers = models.IntegerField()
