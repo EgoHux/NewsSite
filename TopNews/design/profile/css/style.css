@@ -1,0 +1,116 @@
+body {
+  background-color: #A85A5A;
+}
+
+.form {
+  margin-top: 200px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: normal;
+      -ms-flex-align: normal;
+          align-items: normal;
+}
+
+.form .left img {
+  max-width: 450px;
+  max-height: 500px;
+}
+
+.form .right {
+  margin-left: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.form .input_wrapper {
+  position: relative;
+}
+
+.form .input_wrapper .controller {
+  position: absolute;
+  top: 25px;
+  right: 75px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  font-family: Play;
+  font-size: 20px;
+  font-weight: bold;
+  color: #0500FF;
+  text-decoration: none;
+}
+
+.form .input_wrapper .current_value {
+  display: none;
+}
+
+.form .input_wrapper .password_controller {
+  text-decoration: none;
+  font-family: Play;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+}
+
+input {
+  width: 450px;
+  padding: 15px 20px;
+  margin-top: 10px;
+  color: black;
+  font-family: Play;
+  font-size: 20px;
+  border: 0;
+  outline: none;
+}
+
+input::-webkit-input-placeholder {
+  color: black;
+}
+
+.buttons {
+  margin-top: 30px;
+}
+
+.buttons a {
+  font-family: Play;
+  font-size: 25px;
+  font-weight: normal;
+  display: block;
+  color: white;
+  text-decoration: none;
+}
+
+button {
+  min-width: 50%;
+  font-family: Play;
+  font-size: 25px;
+  font-weight: normal;
+  color: white;
+  border-radius: 42px;
+  background-color: black;
+  border: 0;
+  padding: 15px 15px;
+  outline: none;
+}
+
+button:last-child {
+  margin-top: 15px;
+}
+
+.back_arrow {
+  position: absolute;
+  left: 5%;
+  top: 5%;
+  -webkit-transform: translate(5%, 5%);
+          transform: translate(5%, 5%);
+}
+/*# sourceMappingURL=style.css.map */
