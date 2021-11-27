@@ -28,8 +28,16 @@ class Users(models.Model):
     password = models.CharField(max_length=30)
     role = models.ForeignKey(Roles, null=True, on_delete=models.SET_NULL)
 
+class Sites(models.Model):
+    name = models.CharField(max_length=30)
+    base_url = models.TextField()
+
+class Reporters(models.Model):
+    user = models.ForeignKey(Users, null=True, on_delete=models.SET_NULL)
+    site = models.ForeignKey(Sites, null=True, on_delete=models.SET_NULL)
 
 class Posts(models.Model):
+    reporter = models.ForeignKey(Reporters, null=True, on_delete=models.SET_NULL)
     date = models.DateField()
     title = models.CharField(max_length=30)
     short_description = models.TextField()
@@ -49,3 +57,9 @@ class Comments(models.Model):
     post = models.ForeignKey(Posts, null=True, on_delete=models.SET_NULL)
     date = models.DateField()
     text = models.TextField()
+
+
+
+
+
+
