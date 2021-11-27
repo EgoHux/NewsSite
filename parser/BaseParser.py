@@ -63,13 +63,13 @@ class ParserKuzbassOnline:
     @staticmethod
     def parse(lastDateParse, connect):
         global news
-        page = 75
+        page = 1
         flag = True
         TOTAL_POSTS = 0
         news = []
 
         while flag:
-            url = "{}/news_frame?feedType=news_frame&page={}#/".format(URL.BASE_KUZBASS_ONLINE.value, page)
+            url = "{}/news?feedType=news&page={}#/".format(URL.BASE_KUZBASS_ONLINE.value, page)
             try:
                 response = requests.get(url, headers=Settings.headers)
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -221,7 +221,7 @@ class Settings:
 
     pathToDatabaseFile = "../TopNews/db.sqlite3"
 
-    basePackageImg = "D://"
+    basePackageImg = "C://"
 
 connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 
@@ -230,7 +230,7 @@ startDateParse = datetime.strptime(datetime.now().date().__str__(), "%Y-%m-%d")
 lastDateParse = DataBase.getLastDateParse(connect)
 
 # Сюда вписывать все парсеры
-# ParserKuzbassOnline.parse(lastDateParse, connect)
+ParserKuzbassOnline.parse(lastDateParse, connect)
 
 
 #сделать запись о последнем парсинге
