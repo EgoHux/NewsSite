@@ -8,8 +8,8 @@ import base64
 import enum
 from datetime import datetime
 
-class ParserHabr:
 
+class ParserHabr:
     @staticmethod
     def parse(lastDateParse):
         global news
@@ -88,7 +88,8 @@ class ParserKuzbassOnline:
                     if not ("https" in urlImage):
                         urlImage = "https://online-kuzbass.ru{}".format(urlImage)
                     print(urlImage)
-                    img = Utils.convertImage(urlImage)
+                    #img = Utils.convertImage(urlImage)
+                    img = urlImage
 
                     url_post = "{}{}".format(URL.BASE_KUZBASS_ONLINE.value, item.get("href"))
                     responsePost = requests.get(url_post, headers=Settings.headers)
@@ -100,7 +101,7 @@ class ParserKuzbassOnline:
                     description = dedent(postElement.find("p", class_="post__text").get_text(separator="<br/>")).strip()
 
                     reporter = REPORTER.KUZBASS_ONLINE_REPORTER_ID.value
-                    post = News(date.strftime("%d-%m-%Y"), title, description, img, reporter)
+                    post = News(date.strftime("%Y-%m-%d"), title, description, img, reporter)
                     news.append(post)
                     print("title: " + title)
                     TOTAL_POSTS += 1
@@ -110,7 +111,7 @@ class ParserKuzbassOnline:
                 flag = False
                 print("TOTAL POSTS: " + str(TOTAL_POSTS))
 
-            except Exception:
+            except BaseException:
                 print("Последняя страница достигнута")
                 flag = False
                 print("TOTAL POSTS: " + str(TOTAL_POSTS))
@@ -134,28 +135,29 @@ class News:
 
 class Utils:
 
-    @staticmethod
-    def convertImage(url):
-        pathImage = Utils.downloadImg(url)
-        blob = Utils.convertToBlob(pathImage)
-        Utils.deleteFile(pathImage)
-        return blob
+    # @staticmethod
+    # def convertImage(url):
+    #     pathImage = Utils.downloadImg(url)
+    #     # blob = Utils.convertToBlob(pathImage)
+    #     # Utils.deleteFile(pathImage)
+    #     # return blob
+    #     return pathImage
 
-    @staticmethod
-    def convertToBlob(pathImg):
-        img = open(pathImg, 'rb')
-        blob = img.read()
-        return blob
+    # @staticmethod
+    # def convertToBlob(pathImg):
+    #     img = open(pathImg, 'rb')
+    #     blob = img.read()
+    #     return blob
 
-    @staticmethod
-    def downloadImg(url):
-
-        fileName = Settings.basePackageImg + str(uuid.uuid4()) + ".jpg"
-        r = requests.get(url, allow_redirects=True)
-        # Сохранение изображения файлом
-        open(fileName, 'wb').write(r.content)
-
-        return fileName
+    # @staticmethod
+    # def downloadImg(url):
+    #
+    #     fileName = Settings.basePackageImg + str(uuid.uuid4()) + ".jpg"
+    #     r = requests.get(url, allow_redirects=True)
+    #     # Сохранение изображения файлом
+    #     open(fileName, 'wb').write(r.content)
+    #
+    #     return fileName
 
     @staticmethod
     def deleteFile(path):
@@ -177,7 +179,7 @@ class DataBase:
     def saveToDataBase(posts, connect):
         for item in posts:
             cursor = connect.cursor()
-            cursor.execute("INSERT INTO Posts (date, title, description, img, reporterId) VALUES(?, ?, ?, ?, ?)", [item.date, item.title, item.description, sqlite3.Binary(item.img), item.reporter])
+            cursor.execute("INSERT INTO main_posts (date, title, description, short_description, image, reporter_id, viewers) VALUES(?, ?, ?, ?, ?, ?, ?)", [item.date, item.title, item.description, "", item.img, item.reporter, 0])
             connect.commit()
             cursor.close()
 
@@ -186,7 +188,7 @@ class DataBase:
     @staticmethod
     def saveLastDateParseTodataBase(date, connect):
         cursor = connect.cursor()
-        query = "INSERT INTO DateLastParse (lastDate) VALUES ('{}')".format(datetime.strftime(date, "%d-%m-%Y"))
+        query = "INSERT INTO main_datelastparse (lastDate) VALUES ('{}')".format(datetime.strftime(date, "%d-%m-%Y"))
         print(query)
         cursor.execute(query)
         connect.commit()
@@ -194,12 +196,12 @@ class DataBase:
 
     @staticmethod
     def getLastDateParse(connect):
-        cursor = connect.cursor()
-        query = "SELECT lastDate FROM DateLastParse ORDER BY id DESC LIMIT 1"
-        record = cursor.execute(query).fetchall()[0][0]
-        cursor.close()
+        # cursor = connect.cursor()
+        # query = "SELECT lastDate FROM main_datelastparse ORDER BY id DESC LIMIT 1"
+        # record = cursor.execute(query).fetchall()[0][0]
+        # cursor.close()
 
-        return datetime.strptime(record, "%d-%m-%Y")
+        return datetime.strptime("01-01-2018", "%d-%m-%Y")#datetime.strptime(record, "%d-%m-%Y")
 
 class URL(enum.Enum):
     BASE_HABR = "https://habr.com/ru"
@@ -221,7 +223,7 @@ class Settings:
 
     pathToDatabaseFile = "../TopNews/db.sqlite3"
 
-    basePackageImg = "C://"
+    basePackageImg = "C:/images/"
 
 connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 

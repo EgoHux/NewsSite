@@ -11,7 +11,7 @@
                 <a href="{% url 'news_frame' %}" class="post_wrapper">
                     <div class="post col-lg-12">
                         <div class="left_box col-lg-6">
-                            <img src="{{ i.image.url}}" alt="img">
+                            <img src="{{ i.image }}" alt="img">
                             <!--srcset="img-320.png 320w, img-640.png 640w" -->
                             <ul class="hashtags">
                                 <li>
@@ -39,7 +39,7 @@
                                 reporter ...
                             </div>
                             <div class="post_date">
-                                {{i.date}}
+<!--                                {{i.date}}-->
                             </div>
                             <div class="row down_line_wrapper">
                                 <div class="rating col-lg-6">

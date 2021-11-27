@@ -6,6 +6,9 @@ from django.db import models
 
 
 # Create your models here.
+from setuptools.command.upload import upload
+
+
 class Roles(models.Model):
     nameRole = models.CharField(max_length=20)
 
@@ -33,8 +36,8 @@ class Sites(models.Model):
     base_url = models.TextField()
 
 class Reporters(models.Model):
-    user = models.ForeignKey(Users, null=True, on_delete=models.SET_NULL)
-    site = models.ForeignKey(Sites, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(Users, null=True, on_delete=models.SET_NULL, db_constraint=False)
+    site = models.ForeignKey(Sites, null=True, on_delete=models.SET_NULL, db_constraint=False)
 
 class Posts(models.Model):
     reporter = models.ForeignKey(Reporters, null=True, on_delete=models.SET_NULL)
@@ -42,7 +45,7 @@ class Posts(models.Model):
     title = models.CharField(max_length=30)
     short_description = models.TextField()
     description = models.TextField()
-    image = models.ImageField()
+    image = models.ImageField(upload_to="C:/images")
     viewers = models.IntegerField()
 
 
@@ -58,6 +61,8 @@ class Comments(models.Model):
     date = models.DateField()
     text = models.TextField()
 
+class DateLastParse(models.Model):
+    lastDate = models.TextField()
 
 
 
