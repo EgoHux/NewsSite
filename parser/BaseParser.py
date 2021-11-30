@@ -88,8 +88,8 @@ class ParserKuzbassOnline:
                     if not ("https" in urlImage):
                         urlImage = "https://online-kuzbass.ru{}".format(urlImage)
                     print(urlImage)
-                    #img = Utils.convertImage(urlImage)
-                    img = urlImage
+                    img = Utils.convertImage(urlImage)
+                    #img = urlImage
 
                     url_post = "{}{}".format(URL.BASE_KUZBASS_ONLINE.value, item.get("href"))
                     responsePost = requests.get(url_post, headers=Settings.headers)
@@ -138,13 +138,13 @@ class News:
 
 class Utils:
 
-    # @staticmethod
-    # def convertImage(url):
-    #     pathImage = Utils.downloadImg(url)
-    #     # blob = Utils.convertToBlob(pathImage)
-    #     # Utils.deleteFile(pathImage)
-    #     # return blob
-    #     return pathImage
+    @staticmethod
+    def convertImage(url):
+        pathImage = Utils.downloadImg(url)
+        # blob = Utils.convertToBlob(pathImage)
+        # Utils.deleteFile(pathImage)
+        # return blob
+        return pathImage
 
     # @staticmethod
     # def convertToBlob(pathImg):
@@ -152,15 +152,15 @@ class Utils:
     #     blob = img.read()
     #     return blob
 
-    # @staticmethod
-    # def downloadImg(url):
-    #
-    #     fileName = Settings.basePackageImg + str(uuid.uuid4()) + ".jpg"
-    #     r = requests.get(url, allow_redirects=True)
-    #     # Сохранение изображения файлом
-    #     open(fileName, 'wb').write(r.content)
-    #
-    #     return fileName
+    @staticmethod
+    def downloadImg(url):
+
+        fileName = Settings.basePackageImg + str(uuid.uuid4()) + ".jpg"
+        r = requests.get(url, allow_redirects=True)
+        # Сохранение изображения файлом
+        open(fileName, 'wb').write(r.content)
+
+        return fileName
 
     @staticmethod
     def deleteFile(path):
@@ -230,7 +230,7 @@ class Settings:
 
     pathToDatabaseFile = "../TopNews/db.sqlite3"
 
-    basePackageImg = "C:/images/"
+    basePackageImg = "../TopNews/media/"
 
 connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 
