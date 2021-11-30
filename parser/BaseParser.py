@@ -99,9 +99,10 @@ class ParserKuzbassOnline:
                     title = dedent(postElement.find("h1", class_="post__title").text).strip()
 
                     description = dedent(postElement.find("p", class_="post__text").get_text(separator="<br/>")).strip()
+                    short_description = (description[:300] + '...') if len(description) > 75 else description
 
                     reporter = REPORTER.KUZBASS_ONLINE_REPORTER_ID.value
-                    post = News(date.strftime("%Y-%m-%d"), title, description, img, reporter)
+                    post = News(date.strftime("%Y-%m-%d"), title, description, short_description, img, reporter)
                     news.append(post)
                     print("title: " + title)
                     TOTAL_POSTS += 1
@@ -123,13 +124,15 @@ class News:
     date = ""
     title = ""
     description = ""
+    short_description = ""
     img = ""
     reporter = ""
 
-    def __init__(self, date, title, description, img, reporter):
+    def __init__(self, date, title, description, short_description, img, reporter):
         self.date = date
         self.title = title
         self.description = description
+        self.short_description = short_description
         self.img = img
         self.reporter = reporter
 
@@ -179,7 +182,7 @@ class DataBase:
     def saveToDataBase(posts, connect):
         for item in posts:
             cursor = connect.cursor()
-            cursor.execute("INSERT INTO main_posts (date, title, description, short_description, image, reporter_id, viewers) VALUES(?, ?, ?, ?, ?, ?, ?)", [item.date, item.title, item.description, "", item.img, item.reporter, 0])
+            cursor.execute("INSERT INTO main_posts (date, title, description, short_description, image, reporter_id, viewers) VALUES(?, ?, ?, ?, ?, ?, ?)", [item.date, item.title, item.description, item.short_description, item.img, item.reporter, 0])
             connect.commit()
             cursor.close()
 
@@ -189,19 +192,23 @@ class DataBase:
     def saveLastDateParseTodataBase(date, connect):
         cursor = connect.cursor()
         query = "INSERT INTO main_datelastparse (lastDate) VALUES ('{}')".format(datetime.strftime(date, "%d-%m-%Y"))
-        print(query)
         cursor.execute(query)
         connect.commit()
         cursor.close()
 
     @staticmethod
-    def getLastDateParse(connect):
-        # cursor = connect.cursor()
-        # query = "SELECT lastDate FROM main_datelastparse ORDER BY id DESC LIMIT 1"
-        # record = cursor.execute(query).fetchall()[0][0]
-        # cursor.close()
+    def getLastDateParse(connect, startDate):
+        global date
+        try:
+            cursor = connect.cursor()
+            query = "SELECT lastDate FROM main_datelastparse ORDER BY id DESC LIMIT 1"
+            date = cursor.execute(query).fetchall()[0][0]
+            cursor.close()
+        except Exception as e:
+            date = "01-01-2018"#startDate.strftime("%d-%m-%Y")
+            print("Last date is not found in database")
 
-        return datetime.strptime("01-01-2018", "%d-%m-%Y")#datetime.strptime(record, "%d-%m-%Y")
+        return datetime.strptime(date, "%d-%m-%Y") # datetime.strptime("01-01-2018", "%d-%m-%Y")
 
 class URL(enum.Enum):
     BASE_HABR = "https://habr.com/ru"
@@ -229,7 +236,7 @@ connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 
 
 startDateParse = datetime.strptime(datetime.now().date().__str__(), "%Y-%m-%d")
-lastDateParse = DataBase.getLastDateParse(connect)
+lastDateParse = DataBase.getLastDateParse(connect, startDateParse)
 
 # Сюда вписывать все парсеры
 ParserKuzbassOnline.parse(lastDateParse, connect)
