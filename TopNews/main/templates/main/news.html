@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block title %}Лента новостей{% endblock %}
-{% block link %}{% static 'news_list/css/style.css' %}{% endblock %}
+{% block link %}{% static 'news/css/style.css' %}{% endblock %}
 {% block body %}
 <div class="body">
     <div class="container">
@@ -44,20 +44,20 @@
                             <div class="row down_line_wrapper">
                                 <div class="rating col-lg-6">
                                     <div class="likes">
-                                        <img src="{% static 'news_list/img/like_like_disable.svg' %}" alt="img">
+                                        <img src="{% static 'news/img/like_like_disable.svg' %}" alt="img">
                                         <div class="count">
                                             5
                                         </div>
                                     </div>
                                     <div class="dislikes">
-                                        <img src="{% static 'news_list/img/icon_dislike_disable.svg' %}" alt="img">
+                                        <img src="{% static 'news/img/icon_dislike_disable.svg' %}" alt="img">
                                         <div class="count">
                                             5
                                         </div>
                                     </div>
                                 </div>
                                 <div class="viewers col-lg-6">
-                                    <img src="{% static 'news_list/img/icon_viwers.svg' %}" alt="img">
+                                    <img src="{% static 'news/img/icon_viwers.svg' %}" alt="img">
                                     <div class="count">
                                         5
                                     </div>

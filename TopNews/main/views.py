@@ -22,8 +22,7 @@ def login(request):
 
 def list_news(request):
     posts = Posts.objects.all()
-    print(posts)
-    return render(request, 'main/news_list.html', {'title': 'Main Page', 'posts': posts})
+    return render(request, 'main/news.html', {'title': 'Main Page', 'posts': posts})
 
 
 def top_news(request):
