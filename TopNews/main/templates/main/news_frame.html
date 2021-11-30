@@ -68,7 +68,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="comments_wrapper">
@@ -77,6 +76,22 @@
                     <button class="button col-lg-2" type="submit">Отправить</button>
                 </form>
                 <div class="comments">
+                    {% for comment in comments %}
+                    <div class="comment">
+                        <div class="message">
+                            <span>{{ comment.text }}</span>
+                        </div>
+                        <div class="down_line">
+                            <span class="author">
+                                {{ comment.user.login }}
+                            </span>
+                            <span class="date">
+                                {{ comment.date }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
                     <div class="comment">
                         <div class="message">
                             <span>123123</span>

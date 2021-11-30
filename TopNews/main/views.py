@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Posts, Reporters, Likes, Users
+from .models import Posts, Reporters, Likes, Users, Comments
 
 
 def index(request):
@@ -44,7 +44,9 @@ def news_frame(request, id):
     user_is_rating = False # Получить ID пользователя и узнать какая оценка у авторизованного пользователя к этому посту
     rating = {'likes': likes, 'dislikes': dislikes, 'user_is_rating': user_is_rating}
 
-    return render(request, 'main/news_frame.html', {'title': 'title...', 'post': post, 'reporter_info': {'reporter': reporter, 'is_site': is_site}, 'rating': rating})
+    comments = Comments.objects.filter(post_id = post.id)
+
+    return render(request, 'main/news_frame.html', {'title': 'title...', 'post': post, 'reporter_info': {'reporter': reporter, 'is_site': is_site}, 'rating': rating, 'comments': comments})
 
 
 def registration(request):
