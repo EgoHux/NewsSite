@@ -8,13 +8,13 @@
         <div class="row">
             <div class="post">
                 <div class="img_block">
-                    <img src="{% static 'news_frame/img/nlo.png' %}" alt="img" class="img"> <!--srcset="img-320.png 320w, img-640.png 640w" -->
+                    <img src="{{ post.image }}" alt="img" class="img"> <!--srcset="img-320.png 320w, img-640.png 640w" -->
                 </div>
 
                 <div class="post_info">
-                    <h2 class="post_title">title ......</h2>
+                    <h2 class="post_title">{{ post.title }}</h2>
                     <div class="post_description">
-                        description ....
+                        {{ post.description }}
                     </div>
                     <ul class="hashtags">
                         <li class="hashtag">
@@ -32,7 +32,12 @@
 
                     </ul>
                     <div class="post_reporter">
-                        <a href="">Источник: reporter (не работает) ...</a>
+                        Источник:
+                        {% if reporter_info.is_site %}
+                            <a href="{{ reporter_info.reporter.base_url }}">{{ reporter_info.reporter.name }}</a>
+                        {% else %}
+                            <a href="{{ reporter_info.reporter.id }}">{{ reporter_info.reporter.name }}</a>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -42,13 +47,13 @@
                         <div class="likes">
                             <img src="{% static 'news_frame/img/like_like_disable.svg' %}" alt="img">
                             <div class="count">
-                                5
+                                 {{ rating.likes }}
                             </div>
                         </div>
                         <div class="dislikes">
                             <img src="{% static 'news_frame/img/icon_dislike_disable.svg' %}" alt="img">
                             <div class="count">
-                                5
+                                {{ rating.dislikes }}
                             </div>
                         </div>
                     </div>
@@ -56,10 +61,10 @@
                         <div class="viewers">
                             <img src="{% static 'news_frame/img/icon_viwers.svg' %}" alt="img">
                             <div class="count">
-                                5
+                                {{ post.viewers }}
                             </div>
                             <div class="date">
-                                08.12.2021
+                               {{ post.date }}
                             </div>
                         </div>
                     </div>
