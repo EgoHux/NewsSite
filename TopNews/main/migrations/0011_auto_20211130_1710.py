@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='posts',
             name='image',
-            field=models.ImageField(upload_to='images/'),
+            field=models.ImageField(upload_to='media/'),
         ),
         migrations.AlterField(
             model_name='users',
             name='image',
-            field=models.ImageField(null=True, upload_to='images/'),
+            field=models.ImageField(null=True, upload_to='media/'),
         ),
     ]

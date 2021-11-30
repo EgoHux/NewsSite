@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Posts, Reporters, Likes, Users, Comments
 
 
@@ -17,6 +17,21 @@ def create(request):
 
 
 def login(request):
+    validate = True
+    if request.method == "POST":
+        login = request.POST.get('login')
+        password = request.POST.get('password')
+        # пользователь не зарегистрирован
+        # Логин и пароль не валидны
+        user = Users.objects.filter(login = login, password = password).values()[0]
+        if (user != None):
+            validate = False
+        if (validate == True):
+            response = HttpResponseRedirect('news')
+            response.set_cookie('user', user)
+            return response
+    if (request.COOKIES.get('user') != None):
+        request.delete_cookie('user')
     return render(request, 'main/login.html')
 
 
