@@ -8,7 +8,7 @@
         <div class="row">
             <div class="posts_list col-lg-12">
                 {% for i in posts %}
-                <a href="{% url 'news_frame' %}" class="post_wrapper">
+                <a href="{% url 'news_frame' i.id %}" class="post_wrapper">
                     <div class="post col-lg-12">
                         <div class="left_box col-lg-6">
                             <img src="{{ i.image }}" alt="img">

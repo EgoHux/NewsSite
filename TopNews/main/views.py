@@ -30,8 +30,9 @@ def top_news(request):
     return render(request, 'main/top_news.html')
 
 
-def news_frame(request):
-    return render(request, 'main/news_frame.html')
+def news_frame(request, id):
+    post = Posts.objects.get(id=id)
+    return render(request, 'main/news_frame.html', {'title': 'title...', 'post': post})
 
 
 def registration(request):
