@@ -10,18 +10,20 @@
     <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
 </head>
 <body>
-    <form class="form" method="post" action="/login">
+    <form class="form" method="post" action="{% url 'login' %}">
         {% csrf_token %}
         <h1 class="title_form">Вход</h1>
 
         <div class="inputs">
-            <input class="input" type="email" name="login" placeholder="Введите адрес электронной почты(не работает)">
+            <input class="input" type="email" name="email" placeholder="Введите адрес электронной почты(не работает)">
             <input class="input" type="password" name="password" placeholder="Введите пароль(не работает)">
         </div>
 
         <div class="buttons">
-            <button class="button">Войти</button>
-            <a href="registration" class="">Регистрация</a>
+{#            <button class="button">Войти</button>#}
+            <input class="button" type="submit" value="Войти" />
+            <input type="hidden" name="next" value="{% url 'news' %}" />
+            <a href="{% url 'registration' %}" class="">Регистрация</a>
         </div>
 
     </form>

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
 
 # python manage.py makemigrations
 # python manage.py migrate
@@ -7,10 +7,6 @@ from django.db import models
 
 # Create your models here.
 from setuptools.command.upload import upload
-
-
-class Roles(models.Model):
-    nameRole = models.CharField(max_length=20)
 
 
 # models.CASCADE: автоматически удаляет строку из зависимой таблицы, если удаляется связанная строка из главной таблицы
@@ -23,13 +19,10 @@ class Roles(models.Model):
 
 # models.DO_NOTHING: при удалении связанной строки из главной таблицы не производится никаких действий в зависимой таблице
 
-
-class Users(models.Model):
-    name = models.CharField(max_length=30)
+class Users(AbstractUser):
+    name = models.TextField()
     age = models.IntegerField()
-    login = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
-    role = models.ForeignKey(Roles, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to='profiles', null=True)
 
 class Sites(models.Model):

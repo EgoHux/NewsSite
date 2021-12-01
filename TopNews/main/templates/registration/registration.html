@@ -13,8 +13,8 @@
     <a href="{% url 'news' %}" class="back_arrow">
         <img src="{% static 'img/back_arrow.svg' %}"/>
     </a>
-    <form class="form" action="">
-
+    <form class="form" action="" method="POST">
+        {% csrf_token %}
         <h1 class="title_form">Регистрация</h1>
 
             <input class="input" type="text" name="nickname" required  minlength="4" placeholder="Введите псевдоним(не работает)">
@@ -28,7 +28,7 @@
             <input class="input" type="password" name="repeat_password" required placeholder="Повторите пароль(не работает)">
 
         <div class="buttons">
-            <button class="button">Зарегистрироваться(не работает)</button>
+            <input type="submit" class="button">Зарегистрироваться(не работает)</input>
             <a href="">Продолжить без регистрации(не работает)</a>
         </div>
 

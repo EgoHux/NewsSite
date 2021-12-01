@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Posts, Reporters, Likes, Users, Comments
+from django.contrib import auth
 
 
 def index(request):
@@ -17,22 +18,31 @@ def create(request):
 
 
 def login(request):
-    validate = True
+    print("start")
     if request.method == "POST":
-        login = request.POST.get('login')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-        # пользователь не зарегистрирован
-        # Логин и пароль не валидны
-        count_user = Users.objects.filter(login = login, password = password)
-        if not (Users.objects.filter(login = login, password = password)):
-            validate = False
-        if (validate == True):
-            user = Users.objects.filter(login=login, password=password).values()[0]
-            response = HttpResponseRedirect('news')
-            response.set_cookie('user', user)
-            return response
+        user = auth.authenticate(username = email, password = password)
+        print(user)
+        if user is not None:
+            auth.login(request, user)
+            return HttpResponseRedirect("/news")
+    # validate = True
+    # if request.method == "POST":
+    #     login = request.POST.get('login')
+    #     password = request.POST.get('password')
+    #     # пользователь не зарегистрирован
+    #     # Логин и пароль не валидны
+    #     count_user = Users.objects.filter(login = login, password = password)
+    #     if not (Users.objects.filter(login = login, password = password)):
+    #         validate = False
+    #     if (validate == True):
+    #         user = Users.objects.filter(login=login, password=password).values()[0]
+    #         response = HttpResponseRedirect('news')
+    #         response.set_cookie('user', user)
+    #         return response
 
-    return render(request, 'main/login.html')
+    return render(request, 'registration/login.html')
 
 
 def list_news(request):
@@ -64,4 +74,14 @@ def news_frame(request, id):
 
 
 def registration(request):
-    return render(request, 'main/registration.html')
+    if (request.method == 'POST'):
+        email = request.POST.get('login')
+        username = request.POST.get('nickname')
+        age = request.POST.get('age')
+        password = request.POST.get('password')
+        image = '/static/img/base_profile.svg'
+
+        user = Users.objects.create_user(name=username, password=password, username=email, age=age, image=image)
+        user.save()
+        print(login)
+    return render(request, 'registration/registration.html')
