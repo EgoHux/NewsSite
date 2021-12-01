@@ -80,7 +80,6 @@ class ParserKuzbassOnline:
                 for item in items:
                     date = item.find("p", class_="feed-card__date").text.split()[0]
                     date = datetime.strptime(date, "%d.%m.%Y")
-
                     if (date < lastDateParse):
                         raise ValueError
 
@@ -160,7 +159,7 @@ class Utils:
         # Сохранение изображения файлом
         open(fileName, 'wb').write(r.content)
 
-        return fileName
+        return fileName[10:]
 
     @staticmethod
     def deleteFile(path):
@@ -230,7 +229,7 @@ class Settings:
 
     pathToDatabaseFile = "../TopNews/db.sqlite3"
 
-    basePackageImg = "../TopNews/media/"
+    basePackageImg = "../TopNews/media/posts/"
 
 connect = DataBase.create_connection(Settings.pathToDatabaseFile)
 

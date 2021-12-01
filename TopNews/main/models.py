@@ -30,7 +30,7 @@ class Users(models.Model):
     login = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
     role = models.ForeignKey(Roles, null=True, on_delete=models.SET_NULL)
-    image = models.ImageField(upload_to='media/', null=True)
+    image = models.ImageField(upload_to='profiles', null=True)
 
 class Sites(models.Model):
     name = models.CharField(max_length=30)
@@ -46,7 +46,7 @@ class Posts(models.Model):
     title = models.CharField(max_length=30)
     short_description = models.TextField()
     description = models.TextField()
-    image = models.ImageField(upload_to="media/")
+    image = models.ImageField(upload_to="posts")
     viewers = models.IntegerField()
 
 
