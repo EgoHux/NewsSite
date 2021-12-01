@@ -23,15 +23,15 @@ def login(request):
         password = request.POST.get('password')
         # пользователь не зарегистрирован
         # Логин и пароль не валидны
-        user = Users.objects.filter(login = login, password = password).values()[0]
-        if (user != None):
+        count_user = Users.objects.filter(login = login, password = password)
+        if not (Users.objects.filter(login = login, password = password)):
             validate = False
         if (validate == True):
+            user = Users.objects.filter(login=login, password=password).values()[0]
             response = HttpResponseRedirect('news')
             response.set_cookie('user', user)
             return response
-    if (request.COOKIES.get('user') != None):
-        request.delete_cookie('user')
+
     return render(request, 'main/login.html')
 
 
