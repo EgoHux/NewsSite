@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Posts, Reporters, Likes, Users, Comments
 from django.contrib import auth
-
+from time import gmtime, strftime
 
 def index(request):
     posts = Posts.objects.all()
@@ -77,3 +77,23 @@ def profiles(request, id):
         return render(request, 'main/profiles.html', {'usr': user})
     if request.method == 'POST':
         return "true"
+
+def comments(request, id):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        message = request.POST.get('message')
+        datetime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
+        user = None
+        post = None
+
+        if user_id:
+            user = Users.objects.get(id=user_id)
+        if id:
+            post = Posts.objects.get(id=id)
+
+        comment = Comments(user = user, post = post, date = datetime, text = message )
+        comment.save()
+
+        redirect_url = "/news/"+id.__str__()
+    return HttpResponseRedirect(redirect_url)

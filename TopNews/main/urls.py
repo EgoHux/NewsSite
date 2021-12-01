@@ -15,7 +15,8 @@ urlpatterns = [
     path('news/top', views.top_news, name='top_news'),
     path('news/<int:id>', views.news_frame, name='news_frame'),
     path('accounts/registration/', views.registration, name='registration'),
-    path('profiles/<int:id>', views.profiles, name='profiles')
+    path('profiles/<int:id>', views.profiles, name='profiles'),
+    path('news/comments/<int:id>', views.comments, name='comments')
 ]
 
 # включаем возможность обработки картинок

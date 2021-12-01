@@ -52,7 +52,7 @@ class Likes(models.Model):
 class Comments(models.Model):
     user = models.ForeignKey(Users, null=True, on_delete=models.SET_NULL)
     post = models.ForeignKey(Posts, null=True, on_delete=models.SET_NULL)
-    date = models.DateField()
+    date = models.DateTimeField()
     text = models.TextField()
 
 class DateLastParse(models.Model):

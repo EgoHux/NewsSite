@@ -75,8 +75,14 @@
                 </div>
             </div>
             <div class="comments_wrapper">
-                <form class="send_comment d-flex">
-                    <input class="message col-lg-8" type="text" placeholder="Введите сообщение"/>
+                <form class="send_comment d-flex" method="post" action="comments/{{ post.id }}">
+                    {% csrf_token %}
+                    {% if user.id %}
+                        <input style="display: none;" name="user_id" value="{{ user.id }}">
+                    {% else %}
+                        <input style="display: none;" name="user_id" value="">
+                    {% endif %}
+                    <input class="message col-lg-8" type="text" placeholder="Введите сообщение" name="message"/>
                     <button class="button col-lg-2" type="submit">Отправить</button>
                 </form>
                 <div class="comments">
@@ -87,7 +93,13 @@
                         </div>
                         <div class="down_line">
                             <span class="author">
-                                {{ comment.user.login }}
+                                {% if comment.user.id != None %}
+                                    <a href="{% url 'profiles' comment.user.id %}">
+                                        {{ comment.user.name }}
+                                    </a>
+                                {% else %}
+                                    Аноним
+                                {% endif %}
                             </span>
                             <span class="date">
                                 {{ comment.date }}
@@ -95,46 +107,6 @@
                         </div>
                     </div>
                     {% endfor %}
-
-                    <div class="comment">
-                        <div class="message">
-                            <span>123123</span>
-                        </div>
-                        <div class="down_line">
-                                <span class="author">
-                                    Аноним
-                                </span>
-                            <span class="date">
-                                    12.08.2021
-                                </span>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <div class="message">
-                            <span>123123</span>
-                        </div>
-                        <div class="down_line">
-                                <span class="author">
-                                    Аноним
-                                </span>
-                            <span class="date">
-                                    12.08.2021
-                                </span>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <div class="message">
-                            <span>123123</span>
-                        </div>
-                        <div class="down_line">
-                                <span class="author">
-                                    Аноним
-                                </span>
-                            <span class="date">
-                                    12.08.2021
-                                </span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
