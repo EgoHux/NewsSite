@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Лента новостей{% endblock %}
 {% block link %}{% static 'news_frame/css/style.css' %}{% endblock %}
+{% block script %}{% static 'news_frame/index.js' %}{% endblock %}
 {% block body %}
 <div class="body">
     <div class="container">
@@ -45,7 +46,10 @@
                 <div class="row down_line_wrapper">
                     <div class="rating col-lg-6">
                         <div class="likes">
-                            <img src="{% static 'news_frame/img/like_like_disable.svg' %}" alt="img">
+                            <a href="">
+                                <img src="{% static 'news_frame/img/like_like_disable.svg' %}" alt="img">
+                            </a>
+
                             <div class="count">
                                  {{ rating.likes }}
                             </div>
