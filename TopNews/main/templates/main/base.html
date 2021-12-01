@@ -36,15 +36,22 @@
                 <li>
                     <a href="{% url 'registration' %}">регистрация</a>
                 </li>
+                {% if user.is_authenticated %}
+                  <li>
+                    <a href="{% url 'exit' %}">выход</a>
+                </li>
+                {% else %}
                 <li>
                     <a href="{% url 'login' %}">вход</a>
                 </li>
+                {% endif %}
+                {% if user.is_authenticated %}
                 <li>
-                    <a href="">
-                        404
-                        <img src="{% static 'news/img/icon_avatar.svg' %}" alt="img">
+                    <a href="{% url 'profiles' user.id %}">
+                        <img src="{{ user.image }}" alt="img">
                     </a>
                 </li>
+                {% endif %}
             </div>
         </ul>
     </nav>

@@ -124,6 +124,11 @@ header .menu ul .right li:nth-child(3) {
 
 header .menu ul .right li:nth-child(3) a {
   padding: 10px;
+  background-color: maroon;
+}
+
+header .menu ul .right li img {
+  width: 48px;
 }
 
 header .menu ul a {
@@ -276,9 +281,7 @@ header .menu ul a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: right;
-      -ms-flex-pack: right;
-          justify-content: right;
+  justify-content: right;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -341,4 +344,3 @@ footer .footer ul li a {
   font-weight: bold;
   text-decoration: none;
 }
-/*# sourceMappingURL=style.css.map */

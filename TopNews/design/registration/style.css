@@ -54,7 +54,7 @@ body {
     text-decoration: none;
   }
   
-  button {
+  .buttons .button {
     min-width: 50%;
     font-family: Play;
     font-size: 25px;
@@ -67,7 +67,7 @@ body {
     outline: none;
   }
   
-  button:last-child {
+  .buttons .button:last-child {
     margin-top: 15px;
   }
   
