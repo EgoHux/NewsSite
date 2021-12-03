@@ -20,16 +20,14 @@
                     <a href="{% url 'news' %}">новости</a>
                 </li>
                 <li>
-                    <a href="">популярные(Не работает)</a>
+                    <a href="{% url 'top_news' %}">популярные</a>
                 </li>
             </div>
             <li class="center col-lg-4 text-center">
-                <!-- <input type="text" placeholder="Введите название статьи">
-                <button>найти</button> -->
-                <form>
+                <form method="get" action="{% url 'search' %}">
                     <div class="search">
-                        <input class="col-lg-9" type="search" placeholder="Введите название статьи(не работает)" name="q">
-                        <input class="col-lg-3" type="submit" value="поиск(не работает)">
+                        <input class="col-lg-9" type="search" placeholder="Введите название статьи" name="key">
+                        <input class="col-lg-3" type="submit" value="поиск">
                     </div>
                 </form>
             </li>
@@ -64,13 +62,13 @@
     <nav class="footer">
         <ul>
             <li>
-                <a href="">Справка_1(не работает)</a>
+                <a href="">Справка_1</a>
             </li>
             <li>
-                <a href="">Справка_2(не работает)</a>
+                <a href="">Справка_2</a>
             </li>
             <li>
-                <a href="">Справка_3(не работает)</a>
+                <a href="">Справка_3</a>
             </li>
         </ul>
     </nav>

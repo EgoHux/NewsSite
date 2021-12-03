@@ -7,13 +7,12 @@
     <div class="container">
         <div class="row">
             <div class="posts_list col-lg-12">
-                {% for i in posts %}
-                <a href="{% url 'news_frame' i.id %}" class="post_wrapper">
+                {% for post in posts %}
+                <a href="{% url 'news_frame' post.id %}" class="post_wrapper">
                     <div class="post col-lg-12">
                         <div class="left_box col-lg-6">
-                            <img src="{{ i.image }}" alt="img">
-                            <!--srcset="img-320.png 320w, img-640.png 640w" -->
-                            <ul class="hashtags">
+                            <img src="{{ post.image }}" alt="img">
+                            <!-- <ul class="hashtags">
                                 <li>
                                     <span class="hashtag">#link</span>
                                 </li>
@@ -26,20 +25,27 @@
                                 <li>
                                     <span class="hashtag">#link</span>
                                 </li>
-                            </ul>
+                            </ul> -->
                         </div>
                         <div class="right_box col-lg-6">
                             <div class="post_title">
-                                <h2>{{i.title}}</h2>
+                                <h2>{{post.title}}</h2>
                             </div>
                             <div class="post_description">
-                                {{i.short_description}}
+                                {{post.short_description}}
                             </div>
                             <div class="post_reporter">
-                                reporter ...
+                                Источник:
+                                <span style="color: blue;">
+                                    {% if post.reporter.site %}
+                                        {{ post.reporter.site.name }}
+                                    {% else %}
+                                        {{ post.user.name }}
+                                    {% endif %}
+                            </span>
                             </div>
                             <div class="post_date">
-<!--                                {{i.date}}-->
+                               {{post.date}}
                             </div>
                             <div class="row down_line_wrapper">
                                 <div class="rating col-lg-6">
@@ -59,7 +65,7 @@
                                 <div class="viewers col-lg-6">
                                     <img src="{% static 'news/img/icon_viwers.svg' %}" alt="img">
                                     <div class="count">
-                                        5
+                                        {{ post.viewers }}
                                     </div>
                                 </div>
                             </div>

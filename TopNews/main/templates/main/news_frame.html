@@ -45,22 +45,19 @@
 
                 <div class="row down_line_wrapper">
                     <div class="rating col-lg-6">
-                        <div class="likes">
-                            <a href="">
-                                <img src="{% static 'news_frame/img/like_like_disable.svg' %}" alt="img">
-                            </a>
-
+                        <a href="#" class="likes">
+                            <img src="{% static 'news_frame/img/like_like_disable.svg' %}" alt="img">
                             <div class="count">
                                  {{ rating.likes }}
                             </div>
-                        </div>
-                        <div class="dislikes">
+                        </a>
+                        <a href="#" class="dislikes">
                             <img src="{% static 'news_frame/img/icon_dislike_disable.svg' %}" alt="img">
                             <div class="count">
                                 {{ rating.dislikes }}
                             </div>
-                        </div>
-                    </div>
+                        </a>
+                </div>
                     <div class="right_box col-lg-6">
                         <div class="viewers">
                             <img src="{% static 'news_frame/img/icon_viwers.svg' %}" alt="img">

@@ -117,7 +117,9 @@ class ParserKuzbassOnline:
                 print("TOTAL POSTS: " + str(TOTAL_POSTS))
 
             page += 1
+            print("PAGE: " + page.__str__())
             DataBase.saveToDataBase(news, connect)
+            news = []
 
 class News:
     date = ""

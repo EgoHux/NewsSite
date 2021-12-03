@@ -35,7 +35,21 @@ def list_news(request):
     return render(request, 'main/news.html', {'title': 'Main Page', 'posts': posts})
 
 def top_news(request):
-    return render(request, 'main/top_news.html')
+    posts = Posts.objects.order_by('-viewers')
+    return render(request, 'main/news.html', {'title': 'FFF Page', 'posts': posts})
+
+def search(request):
+    key = request.GET.get('key')
+    posts = Posts.objects.filter(title__contains=key)
+    return render(request, 'main/news.html', {'title': 'FFF Page', 'posts': posts})
+
+def set_likes(request, id):
+    user_id = request.user.id
+    
+    return True
+
+def set_dislikes(request, id):
+    return True
 
 def news_frame(request, id):
     post = Posts.objects.get(id=id)
