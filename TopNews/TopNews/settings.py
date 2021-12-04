@@ -132,3 +132,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = 'news'
 
 AUTH_USER_MODEL = "main.Users"
+
+LANGUAGE_CODE = 'ru'

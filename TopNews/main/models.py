@@ -20,8 +20,8 @@ from setuptools.command.upload import upload
 # models.DO_NOTHING: при удалении связанной строки из главной таблицы не производится никаких действий в зависимой таблице
 
 class Users(AbstractUser):
-    name = models.TextField()
-    age = models.IntegerField()
+    name = models.TextField(null=True)
+    age = models.IntegerField(null=True)
     password = models.CharField(max_length=30)
     image = models.ImageField(upload_to='profiles', null=True)
 

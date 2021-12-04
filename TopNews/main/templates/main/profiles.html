@@ -16,7 +16,7 @@
     </a>
     <div class="container">
         <div class="row">
-            <form class="form col-lg-6 offset-col-lg-3" onsubmit="onSubmit();" method="post">
+            <form class="form col-lg-6 offset-col-lg-3" onsubmit="onSubmit();" > <!-- method="post" -->
                 {% csrf_token %}
                 <div class="left">
                     <img src="{{ usr.image }}" alt="">
