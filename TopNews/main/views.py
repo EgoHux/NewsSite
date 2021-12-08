@@ -37,14 +37,6 @@ def search(request):
     posts = Posts.objects.filter(title__contains=key)
     return render(request, 'main/news.html', {'title': 'FFF Page', 'posts': posts})
 
-def set_likes(request, id):
-    user_id = request.user.id
-    
-    return True
-
-def set_dislikes(request, id):
-    return True
-
 def news_frame(request, id):
     post = Posts.objects.get(id=id)
     user = request.user
@@ -60,15 +52,17 @@ def news_frame(request, id):
     reporter = (reporter_obj.site) if reporter_obj.site != None else reporter_obj.user
     is_site = hasattr(reporter, 'base_url')
 
-    # Запихать сюда кол-во лайков/дизлайков и какой статус у авторизованного пользователя(bool)
-    likes = len(Likes.objects.filter(post = post.id, rate = True))
-    dislikes = len(Likes.objects.filter(post = post.id, rate = False))
-    user_is_rating = False # Получить ID пользователя и узнать какая оценка у авторизованного пользователя к этому посту
-    rating = {'likes': likes, 'dislikes': dislikes, 'user_is_rating': user_is_rating}
+    record = Likes.objects.filter(post = post, user = user)
+    if (record.exists()):
+        rating = record[0].rate
+    else:
+        rating = None
+
+    print("Rating: {}".format(rating))
 
     comments = Comments.objects.filter(post_id = post.id)
 
-    return render(request, 'main/news_frame.html', {'title': 'title...', 'post': post, 'reporter_info': {'reporter': reporter, 'is_site': is_site}, 'rating': rating, 'comments': comments})
+    return render(request, 'main/news_frame.html', {'post': post, 'reporter_info': {'reporter': reporter, 'is_site': is_site}, 'rating': rating, 'comments': comments})
 
 def registration(request):
     if (request.method == 'POST'):
@@ -111,4 +105,46 @@ def comments(request, id):
         comment.save()
 
         redirect_url = "/news/"+id.__str__()
+    return HttpResponseRedirect(redirect_url)
+
+def set_likes(request, id):
+    user = request.user
+    post = Posts.objects.get(id=id)
+
+    record = Likes.objects.filter(post = post, user = user)
+
+    like = None
+    if not (record.exists()):
+        like = Likes(post = post, user = user, rate = True)
+    else:
+        like = record[0]
+        like.rate = True
+        post.dislike -= 1
+
+    post.like += 1
+    like.save()
+    post.save()
+
+    redirect_url = "/news/"+id.__str__()
+    return HttpResponseRedirect(redirect_url)
+
+def set_dislikes(request, id):
+    user = request.user
+    post = Posts.objects.get(id=id)
+
+    record = Likes.objects.filter(post = post, user = user)
+
+    dislike = None
+    if not (record.exists()):
+        dislike = Likes(post = post, user = user, rate = False)
+    else:
+        dislike = record[0]
+        dislike.rate = False
+        post.like -= 1
+    
+    post.dislike += 1
+    dislike.save()
+    post.save()
+
+    redirect_url = "/news/"+id.__str__()
     return HttpResponseRedirect(redirect_url)

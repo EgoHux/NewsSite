@@ -243,7 +243,7 @@ header .menu ul a {
 }
 
 .body .post .down_line_wrapper .rating img {
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .body .post .down_line_wrapper .rating .likes {

@@ -16,7 +16,8 @@ urlpatterns = [
     path('profiles/<int:id>', views.profiles, name='profiles'),
     path('news/comments/<int:id>', views.comments, name='comments'),
     path('news/search', views.search, name='search'),
-    #path('news/<int:id>/rate/positive', views.)
+    path('news/<int:id>/rate/positive', views.set_likes, name="positive_likes"),
+    path('news/<int:id>/rate/negative', views.set_dislikes, name="negative_likes")
 ]
 
 # включаем возможность обработки картинок
