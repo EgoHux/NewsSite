@@ -1,0 +1,91 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Лента новостей{% endblock %}
+{% block link %}{% static 'news/css/style.css' %}{% endblock %}
+{% block body %}
+<div class="body">
+    <div class="container">
+        <div class="row">
+            <div class="posts_list col-lg-12">
+                {% for post in posts %}
+                <a href="{% url 'news_frame' post.id %}" class="post_wrapper">
+                    <div class="post col-lg-12">
+                        <div class="left_box col-lg-6">
+                            <img src="{{ post.image }}" alt="img">
+                            <!-- <ul class="hashtags">
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                                <li>
+                                    <span class="hashtag">#link</span>
+                                </li>
+                            </ul> -->
+                        </div>
+                        <div class="right_box col-lg-6">
+                            <div class="post_title">
+                                <h2>{{post.title}}</h2>
+                            </div>
+                            <div class="post_description">
+                                {{post.short_description}}
+                            </div>
+                            <div class="post_reporter">
+                                Источник:
+                                <span style="color: blue;">
+                                    {% if post.reporter.site %}
+                                        {{ post.reporter.site.name }}
+                                    {% else %}
+                                        {{ post.user.name }}
+                                    {% endif %}
+                            </span>
+                            </div>
+                            <div class="post_date">
+                               {{post.date}}
+                            </div>
+                            <div class="row down_line_wrapper">
+                                <div class="rating col-lg-6">
+                                    <div class="likes">
+                                        <img src="{% static 'news/img/icon_like_disable.svg' %}" alt="img">
+                                        <div class="count">
+                                            {{ post.like }}
+                                        </div>
+                                    </div>
+                                    <div class="dislikes">
+                                        <img src="{% static 'news/img/icon_dislike_disable.svg' %}" alt="img">
+                                        <div class="count">
+                                            {{ post.dislike}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="viewers col-lg-6">
+                                    <img src="{% static 'news/img/icon_viwers.svg' %}" alt="img">
+                                    <div class="count">
+                                        {{ post.viewers }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- <div class="pagination">
+        <ul class="col align-self-center">
+            <li><a href="#">«</a></li>
+            <li><a href="" class="active">1</a></li>
+            <li><a href="">2</a></li>
+            <li><a href="">3</a></li>
+            <li><a href="">4</a></li>
+            <li><a href="">5</a></li>
+            <li><a href="#">»</a></li>
+        </ul>
+    </div> -->
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Лента новостей{% endblock %}
+{% block link %}{% static 'news_frame/css/style.css' %}{% endblock %}
+{% block script %}{% static 'news_frame/index.js' %}{% endblock %}
+{% block body %}
+<div class="body">
+    <div class="container">
+        <div class="row">
+            <div class="post">
+                <div class="img_block">
+                    <img src="{{ post.image }}" alt="img" class="img" style="height: 800px;"> <!--srcset="img-320.png 320w, img-640.png 640w" -->
+                </div>
+
+                <div class="post_info">
+                    <h2 class="post_title">{{ post.title }}</h2>
+                    <div class="post_description">
+                        {{ post.description }}
+                    </div>
+                    <ul class="hashtags">
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+                        <li class="hashtag">
+                            <span>#link</span>
+                        </li>
+
+                    </ul>
+                    <div class="post_reporter">
+                        Источник:
+                        {% if reporter_info.is_site %}
+                            <a href="{{ reporter_info.reporter.base_url }}">{{ reporter_info.reporter.name }}</a>
+                        {% else %}
+                            <a href="{{ reporter_info.reporter.id }}">{{ reporter_info.reporter.name }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                <div class="row down_line_wrapper">
+                    <div class="rating col-lg-6">
+                        {% if user.is_authenticated %}
+                            {% if rating == False or rating == None %}
+                                <a href="{% url 'positive_likes' post.id %}" class="likes">
+                            {% endif %}
+                        {% else %}
+                            <div class="likes" style="cursor: default;">
+                        {% endif %}
+                            {% if rating == True %}
+                                <img src="{% static 'news_frame/img/icon_like_enable.svg' %}" alt="img">
+                            {% elif rating == False %}
+                                <img src="{% static 'news_frame/img/icon_like_disable.svg' %}" alt="img">
+                            {% elif rating == None %}
+                                <img src="{% static 'news_frame/img/icon_like_disable.svg' %}" alt="img">
+                            {% endif %}
+                            <div class="count">
+                                {{ post.like }}
+                            </div>
+                        {% if user.is_authenticated %}
+                            </a>
+                        {% else %}
+                            </div>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            {% if rating == True or rating == None %}
+                                <a href="{% url 'negative_likes' post.id %}" class="dislikes">
+                            {% endif %}
+                        {% else %}
+                            <div class="dislikes" style="cursor: default;">
+                        {% endif %}
+                            {% if rating == True %}
+                                <img src="{% static 'news_frame/img/icon_dislike_disable.svg' %}" alt="img">
+                            {% elif rating == False %}
+                                <img src="{% static 'news_frame/img/icon_dislike_enable.svg' %}" alt="img">
+                            {% elif rating == None %}
+                                <img src="{% static 'news_frame/img/icon_dislike_disable.svg' %}" alt="img">
+                            {% endif %}
+                            <div class="count">
+                                {{ post.dislike }}
+                            </div>
+                        {% if user.is_authenticated %}
+                            </a>
+                        {% else %}
+                            </div>
+                        {% endif %}
+                </div>
+                    <div class="right_box col-lg-6">
+                        <div class="viewers">
+                            <img src="{% static 'news_frame/img/icon_viwers.svg' %}" alt="img">
+                            <div class="count">
+                                {{ post.viewers }}
+                            </div>
+                            <div class="date">
+                               {{ post.date }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="comments_wrapper">
+                <form class="send_comment d-flex" method="post" action="comments/{{ post.id }}">
+                    {% csrf_token %}
+                    {% if user.id %}
+                        <input style="display: none;" name="user_id" value="{{ user.id }}">
+                    {% else %}
+                        <input style="display: none;" name="user_id" value="">
+                    {% endif %}
+                    <input class="message col-lg-8" type="text" placeholder="Введите сообщение" name="message"/>
+                    <button class="button col-lg-2" type="submit">Отправить</button>
+                </form>
+                <div class="comments">
+                    {% for comment in comments %}
+                    <div class="comment">
+                        <div class="message">
+                            <span>{{ comment.text }}</span>
+                        </div>
+                        <div class="down_line">
+                            <span class="author">
+                                {% if comment.user.id != None %}
+                                    <a href="{% url 'profiles' comment.user.id %}">
+                                        {{ comment.user.name }}
+                                    </a>
+                                {% else %}
+                                    Аноним
+                                {% endif %}
+                            </span>
+                            <span class="date">
+                                {{ comment.date }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
