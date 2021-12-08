@@ -1,18 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Posts, Reporters, Likes, Users, Comments
+from .models import Posts, Reporters, Likes, Users, Comments, Review
 from django.contrib import auth
 from time import gmtime, strftime
 
 def index(request):
     posts = Posts.objects.all()
     return render(request, 'main/index.html', {'title': 'Main Page', 'posts': posts})
-
-def about(request):
-    return render(request, 'main/about.html')
-
-def create(request):
-    return render(request, 'main/create.html')
 
 def login(request):
     if request.method == "POST":
@@ -53,7 +47,13 @@ def set_dislikes(request, id):
 
 def news_frame(request, id):
     post = Posts.objects.get(id=id)
-    post.viewers += 1
+    user = request.user
+    if user.is_authenticated:
+        if not (Review.objects.filter(user = user.id, post = id).exists()):
+            review = Review(user.id, post.id)
+            review.save()
+            post.viewers += 1
+        
     post.save()
     reporter_obj = Reporters.objects.get(id=post.reporter.id)
     reporter = (reporter_obj.site) if reporter_obj.site != None else reporter_obj.user

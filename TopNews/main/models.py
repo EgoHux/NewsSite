@@ -40,7 +40,9 @@ class Posts(models.Model):
     short_description = models.TextField()
     description = models.TextField()
     image = models.ImageField(upload_to="posts")
-    viewers = models.IntegerField()
+    viewers = models.IntegerField(default=0)
+    like = models.IntegerField(default=0)
+    dislike = models.IntegerField(default=0)
 
 
 class Likes(models.Model):
@@ -57,6 +59,10 @@ class Comments(models.Model):
 
 class DateLastParse(models.Model):
     lastDate = models.TextField()
+
+class Review(models.Model):
+    user = models.ForeignKey(Users, null=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, null=True, on_delete=models.CASCADE)
 
 
 
