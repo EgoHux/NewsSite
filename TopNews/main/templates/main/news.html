@@ -52,13 +52,13 @@
                                     <div class="likes">
                                         <img src="{% static 'news/img/like_like_disable.svg' %}" alt="img">
                                         <div class="count">
-                                            5
+                                            {{ post.like }}
                                         </div>
                                     </div>
                                     <div class="dislikes">
                                         <img src="{% static 'news/img/icon_dislike_disable.svg' %}" alt="img">
                                         <div class="count">
-                                            5
+                                            {{ post.dislike}}
                                         </div>
                                     </div>
                                 </div>

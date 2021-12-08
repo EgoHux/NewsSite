@@ -50,11 +50,12 @@ def news_frame(request, id):
     user = request.user
     if user.is_authenticated:
         if not (Review.objects.filter(user = user.id, post = id).exists()):
-            review = Review(user.id, post.id)
+            review = Review.objects.create(user = user, post = post)
+            #print(review.__dict__)
             review.save()
             post.viewers += 1
+            post.save()
         
-    post.save()
     reporter_obj = Reporters.objects.get(id=post.reporter.id)
     reporter = (reporter_obj.site) if reporter_obj.site != None else reporter_obj.user
     is_site = hasattr(reporter, 'base_url')
