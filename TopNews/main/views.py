@@ -52,11 +52,15 @@ def news_frame(request, id):
     reporter = (reporter_obj.site) if reporter_obj.site != None else reporter_obj.user
     is_site = hasattr(reporter, 'base_url')
 
-    record = Likes.objects.filter(post = post, user = user)
-    if (record.exists()):
-        rating = record[0].rate
+    if user.is_authenticated:
+        record = Likes.objects.filter(post = post, user = user)
+        if (record.exists()):
+            rating = record[0].rate
+        else:
+            rating = None
     else:
         rating = None
+   
 
     print("Rating: {}".format(rating))
 
